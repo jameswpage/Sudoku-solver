@@ -19,7 +19,6 @@ class Square extends React.Component {
 	    if(props.value != 0){
 	    	this.state = {value: props.value};
 	    };
-
 	    this.handleChange = this.handleChange.bind(this);
   	}
 
@@ -127,6 +126,12 @@ class Game extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.arr != this.props.arr){
+	  		this.setState({arr: nextProps.value });
+	  	}  
+	}
+
 	handleSubmit(event) {
 		var puz = [];
 		var row = [];
@@ -176,4 +181,4 @@ class Game extends React.Component {
 	}
 }
 
-export default Game;
+export default Game; 
