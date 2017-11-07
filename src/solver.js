@@ -636,18 +636,4 @@ class sudokuSolver {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
 
-/*
-
-                    
-    
-    __eq__(this, puz2)){
-        same = True
-        for( var i = 0; i < 9; i++){
-            for(var j = 0; j < 9; j++){
-                if( this.puzzle[i][j] != puz2.puzzle[i][j]){
-                    same = False
-        return same
- 
-	*/
-
 export default sudokuSolver;

@@ -23,8 +23,11 @@ class Square extends React.Component {
   	}
 
   	componentWillReceiveProps(nextProps) {
-		if(nextProps.value != this.props.value && nextProps.value != 0){
-	  		if(typeof nextProps.value == "string"){
+		if(nextProps.value != this.props.value) {
+			if(nextProps.value == 0){
+				this.setState({value: ''});
+			}
+	  		else if(typeof nextProps.value == "string"){
 	  			this.setState({value: nextProps.value, font: styles.input});
 	  		}
 	  		else{
@@ -113,22 +116,15 @@ class Board extends React.Component {
 class Game extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {arr: [[5,0,4,9,0,0,0,0,2],
-			              [9,0,0,0,0,2,8,0,0],
-			              [0,0,6,7,0,0,0,0,9],
-			              [0,0,5,0,0,6,0,0,3],
-			              [3,0,0,0,7,0,0,0,1],
-			              [4,0,0,1,0,0,9,0,0],
-			              [2,0,0,0,0,9,7,0,0],
-			              [0,0,8,4,0,0,0,0,6],
-			              [6,0,0,0,0,3,4,0,8]]};
+		this.state = {arr: props.sudokuArray};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(nextProps.arr != this.props.arr){
-	  		this.setState({arr: nextProps.value });
+		console.log(nextProps);
+		if(nextProps.sudokuArray != this.props.arr){
+	  		this.setState({arr: nextProps.sudokuArray });
 	  	}  
 	}
 

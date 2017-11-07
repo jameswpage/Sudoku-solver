@@ -17,6 +17,7 @@ export default class ImageInput extends React.Component {
 	    this.state = {
 	     	 uploadedFile: ''
 	    };
+
 	}
 
 	onImageDrop(files) {
@@ -37,8 +38,8 @@ export default class ImageInput extends React.Component {
 		      console.error(err);
 		    }
 		    else {
-		    	console.log(response);
-		    	console.log(Game);
+		    	this.props.updateArray(JSON.parse(response.text));
+
 		        /*if (response['secure_url'] !== '') {
 			        this.setState({
 		   	            uploadedFileUrl: response['secure_url']
@@ -53,7 +54,7 @@ export default class ImageInput extends React.Component {
 			<div>
 			<Dropzone
 				multiple = {false}
-				accept = "image/jpg, image/png"
+				accept = "image/jpg, image/png, image/jpeg"
 				onDrop={this.onImageDrop.bind(this)}>
 			<p>Drop an image or click to select file to upload</p>
 			</Dropzone>
