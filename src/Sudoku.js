@@ -23,17 +23,15 @@ class Square extends React.Component {
   	}
 
   	componentWillReceiveProps(nextProps) {
-		if(nextProps.value != this.props.value) {
-			if(nextProps.value == 0){
-				this.setState({value: ''});
-			}
-	  		else if(typeof nextProps.value == "string"){
-	  			this.setState({value: nextProps.value, font: styles.input});
-	  		}
-	  		else{
-	  			this.setState({value: nextProps.value, font: styles.guess});
-	  		}
+  		if(nextProps.initial == true){
+  			this.setState({value: nextProps.value, font: styles.input});
+  		}
+		else if(parseInt(nextProps.value) != parseInt(this.state.value)) {
+			this.setState({value: nextProps.value, font: styles.guess});
 	  	}  
+	  	if(nextProps.value == 0){
+			this.setState({value: ''});
+		}
 	}
   
   	handleChange(event) {
@@ -41,8 +39,24 @@ class Square extends React.Component {
   	}
 
   	render() {
+  		var className = 'square';
+  		if(this.props.index == 2 || this.props.index == 5){
+  			className = 'rsquare';
+  		}
+  		if(this.props.index == 3 || this.props.index == 6){
+  			className = 'lsquare';
+  		}
+
+  		var id = 'row';
+  		if(this.props.row == 2 || this.props.row == 5){
+  			id = 'trow';
+  		}
+  		if(this.props.row == 3 || this.props.row == 6 || this.props.row == 0){
+  			id = 'brow';
+  		}
+
 	    return (
-	      <input className="square" value = {this.state.value} style = {this.state.font} onChange={this.handleChange}/>
+	      <input className={className} id = {id} value = {this.state.value} style = {this.state.font} onChange={this.handleChange}/>
 	    );
   	}
 }
@@ -52,12 +66,12 @@ class Row extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {value: this.props.value};
+		this.state = {value: this.props.value, init: this.props.initial};
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.value != this.props.value){
-	  		this.setState({value: nextProps.value });
+	  		this.setState({value: nextProps.value, init: nextProps.initial});
 	  	}  
 	}
 
@@ -71,7 +85,7 @@ class Row extends React.Component {
 
 	  	const listItems = arr.map((square, index) =>
 	    	<Square key={index}
-	              value= {this.state.value[index]} />
+	              value= {this.state.value[index]} initial = {this.state.init} index = {index} row = {this.props.index}/>
 	  	);
 
 	  	return (
@@ -86,12 +100,12 @@ class Board extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {value: this.props.value};
+		this.state = {value: this.props.value, init: this.props.initial};
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.value != this.props.value){
-	  		this.setState({value: nextProps.value });
+	  		this.setState({value: nextProps.value, init: nextProps.initial });
 	  	}  
 	}
  
@@ -104,7 +118,7 @@ class Board extends React.Component {
 
 	  	const listItems = rows.map((num) =>
 		    // Correct! Key should be specified inside the array.
-		    	<Row key={num} value = {this.state.value[num]} />
+		    	<Row key={num} index = {num} value = {this.state.value[num]} initial = {this.state.init}/>
 		);
 
 	  	return (
@@ -116,14 +130,14 @@ class Board extends React.Component {
 class Game extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {arr: props.sudokuArray};
+		this.state = {arr: props.sudokuArray, init: true};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.sudokuArray != this.props.arr){
-	  		this.setState({arr: nextProps.sudokuArray });
+	  		this.setState({arr: nextProps.sudokuArray, init: true });
 	  	}  
 	}
 
@@ -141,9 +155,12 @@ class Game extends React.Component {
 				row = [];
 			}
 		}
+		
+		//tpuz is a reference to the original array that is updated in SudokuSolver
+		var tpuz = puz.slice()
 
 		//code for solving the puzzle until completion
-		var puz = new SudokuSolver(puz);
+		puz = new SudokuSolver(puz.slice(0));
 		var temp = puz.toArray();
 		puz.solve();
 		var temp2 = puz.toArray();
@@ -152,9 +169,10 @@ class Game extends React.Component {
 			puz.solve();
 			temp2 = puz.toArray();
 		}
-
+		
+		var final = puz.toArray()
 		//reset puzzle 
-		this.setState({arr: puz.toArray()});
+		this.setState({arr: final, init: false});
 
 		event.preventDefault();
 	}
@@ -164,7 +182,7 @@ class Game extends React.Component {
 			<form onSubmit={this.handleSubmit}>
 				<div className = "game">
 					<div className = "game-board">
-						<Board value = {this.state.arr} />
+						<Board value = {this.state.arr} initial = {this.state.init} />
 					</div>
 					<div className = "game-info">
 						<div></div>
