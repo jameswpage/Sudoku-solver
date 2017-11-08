@@ -29,8 +29,12 @@ class App extends React.Component {
 	render() {
 		return (
 			<div>
-				<Game sudokuArray = {this.state.sudokuArray} />
-				<ImageUpload updateArray = {this.updateArray.bind(this)} />
+				<div id = "first">
+					<ImageUpload updateArray = {this.updateArray.bind(this)} />
+				</div>
+				<div id = "second">
+					<Game sudokuArray = {this.state.sudokuArray} />
+				</div>
 			</div>
 		);
 	}

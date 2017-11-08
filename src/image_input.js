@@ -51,18 +51,21 @@ export default class ImageInput extends React.Component {
 
 	render() {
 		return (
-			<div>
-			<Dropzone
-				multiple = {false}
-				accept = "image/jpg, image/png, image/jpeg"
-				onDrop={this.onImageDrop.bind(this)}>
-			<p>Drop an image or click to select file to upload</p>
-			</Dropzone>
+			<div id = 'imndrop'>
 			{this.state.uploadedFile != '' ? 
-				<div>
+				<div id = "image">
     				<div><img src={this.state.uploadedFile.preview} /></div>
     			</div> : null}
+				<div id = "drop">
+					<Dropzone
+						multiple = {false}
+						accept = "image/jpg, image/png, image/jpeg"
+						className = "dropzone"
+						onDrop={this.onImageDrop.bind(this)}>
+					</Dropzone>
+				</div>
 			</div>
+		
 		);
 	}
 }

@@ -122,7 +122,6 @@ class Game extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log(nextProps);
 		if(nextProps.sudokuArray != this.props.arr){
 	  		this.setState({arr: nextProps.sudokuArray });
 	  	}  

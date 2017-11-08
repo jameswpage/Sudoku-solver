@@ -9,6 +9,79 @@ ol, ul {
   padding-left: 30px;
 }
 
+h1 {
+  font: 56px "Century Gothic", Futura, sans-serif;
+}
+
+/****************************************************************************************************/
+/*********************************************POSITION GAME******************************************/
+/****************************************************************************************************/
+
+#wrapper {
+  overflow: auto;
+  width: 100%;
+}
+
+#first {
+  position: relative;
+  float: left;
+  width: 49%;
+  height: 300px;
+}
+
+#second { 
+  position: relative;
+  float: left; 
+  width: 49%;
+
+}
+
+#imndrop {
+  position: relative;
+  width: 300px;
+  height: 293px;
+  float: right;
+  margin-right: 5px;
+}
+
+#drop {
+  position: relative;
+  width: 100%;
+  float: right;
+}
+
+
+#image {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  top: 5%;
+  left: 5%;
+  
+  border: solid orange;
+}
+
+#image img {
+  width: 100%;
+}
+
+.dropzone {
+  width: 100%;
+  height: 100%;
+  float: left;
+  border: dashed grey;
+  border-radius: 2px;
+  margin-right: -1px;
+  margin-top: -1px;
+  margin-left: -1px;
+  margin-bottom: -1px;
+}
+
+
+/****************************************************************************************************/
+/***************************************SUDOKU PUZZLE STYLE******************************************/
+/****************************************************************************************************/
+
 .board-row:after {
   clear: both;
   content: "";
@@ -50,3 +123,4 @@ ol, ul {
 .game-info {
   margin-left: 20px;
 }
+
