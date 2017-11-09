@@ -15,19 +15,24 @@ class Square extends React.Component {
 
   	constructor(props) {
 	    super(props);
-	    this.state = {value: '', font: styles.input};
+	    this.state = {value: '', font: styles.input, show: props.show};
 	    if(props.value != 0){
-	    	this.state = {value: props.value};
+	    	this.state = {value: props.value, show: props.show};
 	    };
 	    this.handleChange = this.handleChange.bind(this);
   	}
 
   	componentWillReceiveProps(nextProps) {
   		if(nextProps.initial == true){
-  			this.setState({value: nextProps.value, font: styles.input});
+  			this.setState({value: nextProps.value, font: styles.input, show: true});
   		}
-		else if(parseInt(nextProps.value) != parseInt(this.state.value)) {
-			this.setState({value: nextProps.value, font: styles.guess});
+		else{ 
+			if(parseInt(nextProps.value) != parseInt(this.state.value)) {
+				this.setState({value: nextProps.value, font: styles.guess, show: nextProps.show});
+			}
+			else if(nextProps.show == true && this.state.show == false){
+				this.setState({show: nextProps.show});
+			}
 	  	}  
 	  	if(nextProps.value == 0){
 			this.setState({value: ''});
@@ -55,9 +60,17 @@ class Square extends React.Component {
   			id = 'brow';
   		}
 
-	    return (
-	      <input className={className} id = {id} value = {this.state.value} style = {this.state.font} onChange={this.handleChange}/>
-	    );
+  		if(this.state.show == true){
+		    return (
+		    	<input className={className} id = {id} value = {this.state.value} style = {this.state.font} onChange={this.handleChange}/> 	
+			);
+		}
+		else{
+			return (
+		    	<input className={className} id = {id} value = '' style = {this.state.font} onChange={this.handleChange}/> 	
+			);
+		}
+		
   	}
 }
 
@@ -66,13 +79,16 @@ class Row extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {value: this.props.value, init: this.props.initial};
+		this.state = {value: this.props.value, init: this.props.initial, show: this.props.show};
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.value != this.props.value){
-	  		this.setState({value: nextProps.value, init: nextProps.initial});
-	  	}  
+	  		this.setState({value: nextProps.value, init: nextProps.initial, show: nextProps.show});
+	  	}
+	  	else if(nextProps.show == true && this.state.show == false){
+	  		this.setState({show: true});
+	  	}
 	}
 
 	render() {
@@ -84,7 +100,7 @@ class Row extends React.Component {
 	  	}
 
 	  	const listItems = arr.map((square, index) =>
-	    	<Square key={index}
+	    	<Square key={index} show = {this.state.show}
 	              value= {this.state.value[index]} initial = {this.state.init} index = {index} row = {this.props.index}/>
 	  	);
 
@@ -100,13 +116,17 @@ class Board extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {value: this.props.value, init: this.props.initial};
+		this.state = {value: this.props.value, init: this.props.initial, show: this.props.show};
 	}
 
 	componentWillReceiveProps(nextProps) {
+		console.log('board', nextProps.show);
 		if(nextProps.value != this.props.value){
-	  		this.setState({value: nextProps.value, init: nextProps.initial });
+	  		this.setState({value: nextProps.value, init: nextProps.initial, show: nextProps.show});
 	  	}  
+	  	if(nextProps.show == true && this.state.show == false){
+	  		this.setState({show: true});
+	  	}
 	}
  
   	render() {
@@ -118,7 +138,7 @@ class Board extends React.Component {
 
 	  	const listItems = rows.map((num) =>
 		    // Correct! Key should be specified inside the array.
-		    	<Row key={num} index = {num} value = {this.state.value[num]} initial = {this.state.init}/>
+		    	<Row key={num} index = {num} value = {this.state.value[num]} show = {this.state.show} initial = {this.state.init}/>
 		);
 
 	  	return (
@@ -130,14 +150,15 @@ class Board extends React.Component {
 class Game extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {arr: props.sudokuArray, init: true};
+		this.state = {arr: props.sudokuArray, init: true, show: true};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.showValues = this.showValues.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.sudokuArray != this.props.arr){
-	  		this.setState({arr: nextProps.sudokuArray, init: true });
+	  		this.setState({arr: nextProps.sudokuArray, init: true, show: true });
 	  	}  
 	}
 
@@ -172,23 +193,31 @@ class Game extends React.Component {
 		
 		var final = puz.toArray()
 		//reset puzzle 
-		this.setState({arr: final, init: false});
+		this.setState({arr: final, init: false, show: false});
 
 		event.preventDefault();
+
+		console.log(this)
+	}
+
+	showValues() {
+		console.log('called')
+		this.setState({show: true})
 	}
 
 	render() {
 		return (
-			<form onSubmit={this.handleSubmit}>
+			<form if = "form1" onSubmit = {this.handleSubmit} >
 				<div className = "game">
 					<div className = "game-board">
-						<Board value = {this.state.arr} initial = {this.state.init} />
+						<Board value = {this.state.arr} initial = {this.state.init} show = {this.state.show} />
 					</div>
 					<div className = "game-info">
 						<div></div>
 					</div>
 				</div>
 				<input type="submit" value="Submit" />
+				<button type="button" form="form1" value="Show" onClick= {this.showValues}>Show </button>
 			</form>
 		);
 	}
