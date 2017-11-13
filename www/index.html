@@ -1,16 +1,46 @@
 <!--James Page -->
 <!--index of sudoku solving web app. Uses react components-->
 
-
 <html>
-	<head> 
+	<head>
+		<!doctype html>
+		<meta charset = "utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge"> 
+		<!-- Viewport for responsive web design -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Title -->
+		<title>Sudoku Solver</title>
+		<meta name="description" content="Web app for entering and solving sudoku puzzles. User can enter values themselves, or upload pictures of puzzles for value extraction.">
+		<link rel="icon" type="image/png" href="/static/favicon.png">
 		<script src="/dist/bundle.js" ></script>
 	  	<link rel="stylesheet" href="/dist/style.css">
 	</head>
 	<body>
-		<h1>Sudoku Solver</h1>
+		<div id = 'title'><center><h1>Sudoku Solver</h1></center></div>
 		<div id = "wrapper">
 			<div id = "sudoku_game"></div>
+		</div>
+		<div id = "bottom">
+			<div id = "instructions">
+				<div id = "in1">
+					<h3>Instructions:</h3>
+					<p>Enter known values into their respective boxes.<p> 
+					<p>Click solve to instruct the computer to calculate the solution.<p>
+					<p>Once the puzzle is solved, double click on a square to reveal is value.</p>
+				</div>
+				<div id = "in2">
+					<p>Alternatively, Upload pictures of puzzles to solve by clicking on the upload box. Make sure the extracted values are correct before solving.</p>
+				</div>
+			
+				<div id = 'in3'>
+					<h3>Buttons:</h3>
+						<li>Solve: Solves the puzzle but does not show the answers</li>
+						<li>Show: Shows the answer to the puzzle</li>
+						<li>Clear: Clears the values from the puzzle</li>
+						<li>Reset: Reload the last unsoved inputed puzzle</li>
+						<li style = "margin-bottom: 20px">Check: Reveal incorrect values</li>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

@@ -27,6 +27,10 @@ def allowed_file(filename):
 def index():
     return render_template("index.html")
 
+@app.route("/squares")
+def squares():
+    return render_template("squares.html")
+
 @app.route('/', methods=['POST', 'GET'])
 def upload_file():
     puz = []

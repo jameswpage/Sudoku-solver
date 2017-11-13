@@ -15,35 +15,63 @@ class Square extends React.Component {
 
   	constructor(props) {
 	    super(props);
-	    this.state = {value: '', font: styles.input, show: props.show};
+	    this.state = {value: '', font: styles.input, show: props.show, trueValue: ''};
 	    if(props.value != 0){
-	    	this.state = {value: props.value, show: props.show};
+	    	this.state = {value: props.value, show: props.show, trueValue: props.value};
 	    };
 	    this.handleChange = this.handleChange.bind(this);
+	    this.showValue = this.showValue.bind(this);
+	    this.display = 0
   	}
 
   	componentWillReceiveProps(nextProps) {
+  		console.log(nextProps)
   		if(nextProps.initial == true){
-  			this.setState({value: nextProps.value, font: styles.input, show: true});
+  			this.setState({value: nextProps.value, font: styles.input, show: true, trueValue: nextProps.value});
   		}
 		else{ 
 			if(parseInt(nextProps.value) != parseInt(this.state.value)) {
-				this.setState({value: nextProps.value, font: styles.guess, show: nextProps.show});
+				if(nextProps.check == true){/*} && parseInt(this.state.value) != parseInt(this.state.trueValue)){*/
+	  				this.setState({font: styles.wrong});
+	  			}
+				else{
+					this.setState({value: nextProps.value, font: styles.guess, show: nextProps.show, trueValue: nextProps.value});
+				}
 			}
 			else if(nextProps.show == true && this.state.show == false){
 				this.setState({show: nextProps.show});
 			}
-	  	}  
+			/*else if(nextProps.check == true){
+
+				console.log(nextProps, this.state.value, this.state.trueValue, this.display);
+	  			if(parseInt(this.state.value) != parseInt(this.state.trueValue)){
+	  				console.log(this.state.value);
+	  				this.setState({font: styles.wrong});
+	  			}
+	  		}*/
+	  	}
+
 	  	if(nextProps.value == 0){
-			this.setState({value: ''});
+			this.setState({value: '', trueValue: ''});
 		}
 	}
   
   	handleChange(event) {
-  		this.setState({value: event.target.value});
+  		this.display = event.target.value.toString();
+  		this.setState({value: event.target.value, show: true});
+  		if(this.state.font == styles.wrong){
+  			this.setState({font: styles.guess});
+  		}
+  	}
+
+  	showValue() {
+  		if(this.state.show == false){
+  			this.setState({show: true});
+  		}
   	}
 
   	render() {
+  		console.log(this.state);
   		var className = 'square';
   		if(this.props.index == 2 || this.props.index == 5){
   			className = 'rsquare';
@@ -56,18 +84,20 @@ class Square extends React.Component {
   		if(this.props.row == 2 || this.props.row == 5){
   			id = 'trow';
   		}
-  		if(this.props.row == 3 || this.props.row == 6 || this.props.row == 0){
+  		if(this.props.row == 3 || this.props.row == 6){
   			id = 'brow';
   		}
 
   		if(this.state.show == true){
 		    return (
-		    	<input className={className} id = {id} value = {this.state.value} style = {this.state.font} onChange={this.handleChange}/> 	
+		    	<input className={className} id = {id} value = {this.state.value} style = {this.state.font} 
+		    	onChange={this.handleChange}/> 	
 			);
 		}
 		else{
 			return (
-		    	<input className={className} id = {id} value = '' style = {this.state.font} onChange={this.handleChange}/> 	
+		    	<input className={className} id = {id} value = '' style = {this.state.font} 
+		    	onDoubleClick = {this.showValue} onChange={this.handleChange}/> 	
 			);
 		}
 		
@@ -79,15 +109,20 @@ class Row extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {value: this.props.value, init: this.props.initial, show: this.props.show};
+		this.state = {value: this.props.value, init: this.props.initial, show: this.props.show, check: this.props.check};
 	}
 
 	componentWillReceiveProps(nextProps) {
+		//This does not capture any cases that are NOT caught in the Game component, so it may be better to just iterate
+		//through nextProps and set them all
 		if(nextProps.value != this.props.value){
-	  		this.setState({value: nextProps.value, init: nextProps.initial, show: nextProps.show});
+	  		this.setState({value: nextProps.value, init: nextProps.initial, show: nextProps.show, check: nextProps.check});
 	  	}
 	  	else if(nextProps.show == true && this.state.show == false){
 	  		this.setState({show: true});
+	  	}
+	  	else if(nextProps.check == true && this.state.check == false){
+	  		this.setState({check: true});
 	  	}
 	}
 
@@ -100,7 +135,7 @@ class Row extends React.Component {
 	  	}
 
 	  	const listItems = arr.map((square, index) =>
-	    	<Square key={index} show = {this.state.show}
+	    	<Square key={index} show = {this.state.show} check = {this.state.check}
 	              value= {this.state.value[index]} initial = {this.state.init} index = {index} row = {this.props.index}/>
 	  	);
 
@@ -116,16 +151,18 @@ class Board extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {value: this.props.value, init: this.props.initial, show: this.props.show};
+		this.state = {value: this.props.value, init: this.props.initial, show: this.props.show, check: this.props.check};
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log('board', nextProps.show);
 		if(nextProps.value != this.props.value){
-	  		this.setState({value: nextProps.value, init: nextProps.initial, show: nextProps.show});
+	  		this.setState({value: nextProps.value, init: nextProps.initial, show: nextProps.show, check: nextProps.check});
 	  	}  
 	  	if(nextProps.show == true && this.state.show == false){
 	  		this.setState({show: true});
+	  	}
+	  	if(nextProps.check == true && this.state.show == false){
+	  		this.setState({check: true})
 	  	}
 	}
  
@@ -138,7 +175,8 @@ class Board extends React.Component {
 
 	  	const listItems = rows.map((num) =>
 		    // Correct! Key should be specified inside the array.
-		    	<Row key={num} index = {num} value = {this.state.value[num]} show = {this.state.show} initial = {this.state.init}/>
+		    	<Row key={num} index = {num} value = {this.state.value[num]} show = {this.state.show} 
+		    	initial = {this.state.init} check = {this.state.check} />
 		);
 
 	  	return (
@@ -150,15 +188,18 @@ class Board extends React.Component {
 class Game extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {arr: props.sudokuArray, init: true, show: true};
+		this.state = {arr: props.sudokuArray, init: true, show: true, saved: props.sudokuArray, check: false};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.showValues = this.showValues.bind(this);
+		this.clearValues = this.clearValues.bind(this);
+		this.resetPuzzle = this.resetPuzzle.bind(this);
+		this.checkValues = this.checkValues.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.sudokuArray != this.props.arr){
-	  		this.setState({arr: nextProps.sudokuArray, init: true, show: true });
+	  		this.setState({arr: nextProps.sudokuArray, init: true, show: true, saved: nextProps.sudokuArray, check: false });
 	  	}  
 	}
 
@@ -192,17 +233,39 @@ class Game extends React.Component {
 		}
 		
 		var final = puz.toArray()
+		console.log(final);
 		//reset puzzle 
-		this.setState({arr: final, init: false, show: false});
+		this.setState({arr: final, init: false, check: false, show: false});
 
 		event.preventDefault();
 
-		console.log(this)
 	}
 
 	showValues() {
-		console.log('called')
-		this.setState({show: true})
+		this.setState({show: true});
+	}
+
+	resetPuzzle() {
+		this.setState({arr: this.state.saved, show: false});
+	}
+
+	checkValues() {
+		this.setState({check: true});
+	}
+
+
+	clearValues(){
+		var blank =  [[0,0,0,0,0,0,0,0,0],
+			          [0,0,0,0,0,0,0,0,0],
+			          [0,0,0,0,0,0,0,0,0],
+			          [0,0,0,0,0,0,0,0,0],
+			          [0,0,0,0,0,0,0,0,0],
+			          [0,0,0,0,0,0,0,0,0],
+			          [0,0,0,0,0,0,0,0,0],
+			          [0,0,0,0,0,0,0,0,0],
+			          [0,0,0,0,0,0,0,0,0]];
+
+		this.setState({arr: blank, init: true})
 	}
 
 	render() {
@@ -210,14 +273,18 @@ class Game extends React.Component {
 			<form if = "form1" onSubmit = {this.handleSubmit} >
 				<div className = "game">
 					<div className = "game-board">
-						<Board value = {this.state.arr} initial = {this.state.init} show = {this.state.show} />
+						<Board value = {this.state.arr} initial = {this.state.init} show = {this.state.show} 
+						check = {this.state.check}/>
 					</div>
 					<div className = "game-info">
 						<div></div>
 					</div>
 				</div>
-				<input type="submit" value="Submit" />
-				<button type="button" form="form1" value="Show" onClick= {this.showValues}>Show </button>
+				<input type="submit" value="Solve" />
+				<button type="button" form="form1" value="Show" onClick= {this.showValues}>Show</button>
+				<button type="button" form="form1" value="Clear" onClick= {this.clearValues}>Clear</button>
+				<button type="button" form="form1" value="Reset" onClick= {this.resetPuzzle}>Reset</button>
+				<button type = "button" form = "form1" value = "Check" onClick = {this.checkValues}>Check</button>
 			</form>
 		);
 	}
