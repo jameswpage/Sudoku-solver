@@ -72,7 +72,7 @@ def train(file):
     
     ############################# testing part  #########################
     
-    #img = cv2.imread('C:\\Users\\James Page.JamesPage-THINK\\Anaconda3\\envs\\cvpath\\project_folder\\sudoku\\p6.jpg')
+    img = cv2.imread('C:\\Users\\James Page.JamesPage-THINK\\AnacondaProjects\\sud\\puzzles\\p8.jpg')
     
     #create output image with same shape
     out = np.zeros(img.shape,np.uint8)
