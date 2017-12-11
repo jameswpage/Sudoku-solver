@@ -263,7 +263,7 @@ class sudokuSolver {
 
   
 //////////////////////////////////////////////////////////////////////////////////////////////////////////                      
-    //This function is for( removing potential values from nodes if the value
+    //This function is for removing potential values from nodes if the value
     //is known to be limited to other nodes. 
     //for instance: if two squares in an rcb have ONLY 2 && 3 as potentials, then
     //2 && 3 MUST be in those squares, && can be removed from all other nodes
@@ -627,6 +627,67 @@ class sudokuSolver {
     		arr.push(row);
     	}
     	return arr;
+    }
+
+
+    /*def validVal(self, row, col, val): 
+        for i in range(9):
+            for j in range(9):
+                if i == row or j == col or self.isInBox(i, j, row, col):
+                    if self.puzzle[i][j].answer == val:
+                        return False
+        return True
+    
+    #This function is to complete the puzzle by guessing solutions if the 
+    #initial algorithms are insufficient
+    def bruteSolve(self):
+        for i in range(9):
+            for j in range(9):
+                if self.puzzle[i][j].answer == 0:
+                    
+                    for k, val in enumerate(self.puzzle[i][j].nums):
+                        if val != 0:
+                            if self.validVal(i, j, k+1):
+                                self.puzzle[i][j].answer = k+1
+                                if self.bruteSolve():
+                                    return True
+                                self.puzzle[i][j].answer = 0
+                    return False
+    
+        return True*/
+    validVal(row, col, val) {
+        for(var i = 0; i < 9; i++){
+            for(var j = 0; j < 9; j++) {
+                if((i == row) || (j == col) || this.isInBox(row, col, i, j)) {
+                    if (this.puzzle[i][j].answer == val) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    bruteSolve() {
+        for(var i = 0; i < 9; i++){
+            for(var j = 0; j < 9; j++){
+                if(this.puzzle[i][j].answer == 0){
+                    for(var k = 0; k < 9; k++){
+                        if(this.puzzle[i][j].nums[k] != 0){
+                            if (this.validVal(i, j, k+1)){
+                                this.puzzle[i][j].answer = k+1
+                                if(this.bruteSolve()){
+                                    return true;
+                                }
+                                this.puzzle[i][j].answer = 0
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
         

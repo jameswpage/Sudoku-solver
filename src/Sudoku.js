@@ -25,7 +25,6 @@ class Square extends React.Component {
   	}
 
   	componentWillReceiveProps(nextProps) {
-  		console.log(nextProps)
   		if(nextProps.initial == true){
   			this.setState({value: nextProps.value, font: styles.input, show: true, trueValue: nextProps.value});
   		}
@@ -71,7 +70,6 @@ class Square extends React.Component {
   	}
 
   	render() {
-  		console.log(this.state);
   		var className = 'square';
   		if(this.props.index == 2 || this.props.index == 5){
   			className = 'rsquare';
@@ -232,8 +230,10 @@ class Game extends React.Component {
 			temp2 = puz.toArray();
 		}
 		
+		console.log(puz.solved);
+		puz.bruteSolve();
+
 		var final = puz.toArray()
-		console.log(final);
 		//reset puzzle 
 		this.setState({arr: final, init: false, check: false, show: false});
 

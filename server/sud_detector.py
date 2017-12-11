@@ -62,6 +62,7 @@ def assignLetters():
 
 def train(file):
     img = cv2.imdecode(np.fromstring(file.read(),np.uint8), cv2.IMREAD_UNCHANGED)
+    
     #######   training part    ############### 
     samples = np.loadtxt('generalsamples.data',np.float32)
     responses = np.loadtxt('generalresponses.data',np.float32)
@@ -71,8 +72,6 @@ def train(file):
     model.train(samples,cv2.ml.ROW_SAMPLE, responses)
     
     ############################# testing part  #########################
-    
-    img = cv2.imread('C:\\Users\\James Page.JamesPage-THINK\\AnacondaProjects\\sud\\puzzles\\p8.jpg')
     
     #create output image with same shape
     out = np.zeros(img.shape,np.uint8)
@@ -84,6 +83,7 @@ def train(file):
     max_con_ar = (height*width/81)*.8
     
     puz = [[0]*9 for i in range(9)]
+    
     
     
     #convert image to gray, flip its colors, then convert to black and white
